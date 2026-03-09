@@ -44,17 +44,36 @@
             "configuration": "Asan"
         },
         {
-            "name": "All",
-            "displayName": "Build — All Configurations",
-            "description": "Builds Debug, Release, and Asan in one step. Works because Ninja Multi-Config's default target is 'all:all', which covers every configuration when no --config is passed.",
-            "configurePreset": "default"
-        },
-        {
             "name": "Clean",
             "displayName": "Clean — All Configurations",
             "description": "Removes all build artifacts across every configuration (equivalent to 'make clean'). Omitting 'configuration' causes Ninja Multi-Config to run the clean target for all configs.",
             "configurePreset": "default",
             "targets": ["clean"]
+        }
+    ],
+    "workflowPresets": [
+        {
+            "name": "All",
+            "displayName": "Build All Configurations",
+            "description": "Builds Debug, Release, and Asan in one step.",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "default"
+                },
+                {
+                    "type": "build",
+                    "name": "Debug"
+                },
+                {
+                    "type": "build",
+                    "name": "Asan"
+                },
+                {
+                    "type": "build",
+                    "name": "Release"
+                }
+            ]
         }
     ]
 }

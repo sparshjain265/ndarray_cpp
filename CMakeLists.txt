@@ -9,10 +9,10 @@ cmake_minimum_required(VERSION 3.25)
 # Declares the project name, version, the languages used (CXX = C++), and an
 # optional human-readable description.  CMake sets PROJECT_NAME,
 # PROJECT_VERSION, etc. from these fields.
-project(cpp_eigen_opencv
+project(ndarray_cpp
     VERSION     0.1.0
     LANGUAGES   CXX
-    DESCRIPTION "C++ study project using Eigen3 and OpenCV4"
+    DESCRIPTION "NDArray-CPP: a C++ study project using Eigen3 and OpenCV4"
 )
 
 # ─── C++ Standard ────────────────────────────────────────────────────────────
@@ -135,9 +135,9 @@ set(SOURCES
 #   • IDEs (CLion, VS, VSCode with CMake Tools) show them in the project tree.
 #   • Ninja re-links/re-runs CMake if a header's timestamp changes (dependency tracking).
 set(HEADERS
-    include/cpp_eigen_opencv/shared/debug.hpp
-    include/cpp_eigen_opencv/shared/ndarray.hpp
-    include/cpp_eigen_opencv/shared/geometry.hpp
+    include/ndarray_cpp/shared/debug.hpp
+    include/ndarray_cpp/shared/ndarray.hpp
+    include/ndarray_cpp/shared/geometry.hpp
 )
 
 # ─── Executable Target ───────────────────────────────────────────────────────

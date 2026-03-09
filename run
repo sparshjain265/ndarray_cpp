@@ -37,7 +37,7 @@ case "$BUILD_TYPE" in
         ;;
 esac
 
-TARGET="build/${BUILD_PRESET}/cpp_eigen_opencv"
+TARGET="build/${BUILD_PRESET}/ndarray_cpp"
 
 # Configure all presets
 cmake --preset default
