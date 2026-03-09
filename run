@@ -3,19 +3,33 @@
 
 set -e  # exit on error
 
-# Choose build type: debug, asan, release
-BUILD_TYPE=${1:-rel}  # default to debug if not specified
+# Choose build type: Debug, Asan, Release
+BUILD_TYPE=${1:-dbg}  # default to debug if not specified
 
 # Map BUILD_TYPE to actual directory
 case "$BUILD_TYPE" in
     dbg)
-        BUILD_DIR="build/debug"
+        ;&  # Unconditional Fallthrough
+    debug)
+        ;&
+    Dbg)
+        ;&
+    Debug)
+        BUILD_PRESET="Debug"
         ;;
     asan)
-        BUILD_DIR="build/asan"
+        ;&
+    Asan)
+        BUILD_PRESET="Asan"
         ;;
     rel)
-        BUILD_DIR="build/release"
+        ;&
+    release)
+        ;&
+    Rel)
+        ;&
+    Release)
+        BUILD_PRESET="Release"
         ;;
     *)
         echo "Unknown build type: $BUILD_TYPE"
@@ -23,10 +37,24 @@ case "$BUILD_TYPE" in
         ;;
 esac
 
-TARGET="${BUILD_DIR}/cpp_eigen_opencv"
+TARGET="build/${BUILD_PRESET}/cpp_eigen_opencv"
 
-# Make
-make ${BUILD_TYPE}
+# Configure all presets
+cmake --preset default
 
-# Run executable
-"$TARGET" "${@:2}"  # pass remaining arguments
+# Build required preset
+cmake --build --preset ${BUILD_PRESET}
+
+# Run executable.
+# For the Asan build, GCC links libasan as a shared library (libasan.so).
+# The ASan runtime must be the very first library the dynamic linker
+# initialises; without LD_PRELOAD it may lose the race to libc/libstdc++
+# loaded transitively by OpenCV, causing:
+#   "ASan runtime does not come first in initial library list"
+# LD_PRELOAD forces the OS to map libasan.so before everything else.
+if [[ "$BUILD_PRESET" == "Asan" ]]; then
+    LIBASAN=$(gcc -print-file-name=libasan.so)
+    LD_PRELOAD="$LIBASAN" "$TARGET" "${@:2}"
+else
+    "$TARGET" "${@:2}"
+fi

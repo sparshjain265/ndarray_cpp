@@ -1,0 +1,60 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": { "major": 3, "minor": 25, "patch": 0 },
+
+    "configurePresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "description": "Shared settings inherited by all configure presets",
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "default",
+            "displayName": "Ninja Multi-Config (Debug + Release + Asan)",
+            "description": "Configures a single build tree that supports all three configurations. Run 'cmake --build --preset <debug|release|asan>' after this.",
+            "inherits": "base"
+        }
+    ],
+
+    "buildPresets": [
+        {
+            "name": "Debug",
+            "displayName": "Build — Debug",
+            "description": "No optimisation, full DWARF debug info, GDB-friendly",
+            "configurePreset": "default",
+            "configuration": "Debug"
+        },
+        {
+            "name": "Release",
+            "displayName": "Build — Release",
+            "description": "Full optimisation (-O3 -march=native), assertions disabled",
+            "configurePreset": "default",
+            "configuration": "Release"
+        },
+        {
+            "name": "Asan",
+            "displayName": "Build — Asan",
+            "description": "Debug build with AddressSanitizer + UndefinedBehaviourSanitizer",
+            "configurePreset": "default",
+            "configuration": "Asan"
+        },
+        {
+            "name": "All",
+            "displayName": "Build — All Configurations",
+            "description": "Builds Debug, Release, and Asan in one step. Works because Ninja Multi-Config's default target is 'all:all', which covers every configuration when no --config is passed.",
+            "configurePreset": "default"
+        },
+        {
+            "name": "Clean",
+            "displayName": "Clean — All Configurations",
+            "description": "Removes all build artifacts across every configuration (equivalent to 'make clean'). Omitting 'configuration' causes Ninja Multi-Config to run the clean target for all configs.",
+            "configurePreset": "default",
+            "targets": ["clean"]
+        }
+    ]
+}
